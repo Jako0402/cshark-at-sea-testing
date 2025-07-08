@@ -1,6 +1,6 @@
 extends Node
 
-const SERVER_PORT = 8080
+const SERVER_PORT = 3040
 const SERVER_IP = "127.0.0.1"
 
 var player = preload("res://scenes/player.tscn")
@@ -20,7 +20,8 @@ func become_host():
 	multiplayer.peer_connected.connect(_add_player_to_game)
 	multiplayer.peer_disconnected.connect(_del_player)
 	
-	_add_player_to_game(1)
+	if not OS.has_feature("dedicated_server"):
+		_add_player_to_game(1)
 	
 
 func join_as_player_2():

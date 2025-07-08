@@ -1,5 +1,9 @@
 extends Node
-
+ 
+func _ready() -> void:
+	if OS.has_feature("dedicated_server"):
+		print("Starting dedicated server")
+		MultiplayerManager.become_host()
 
 func become_host():
 	print("Become host pressed")
