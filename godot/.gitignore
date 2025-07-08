@@ -3,5 +3,4 @@
 /android/
 
 # Avoid bloat
-assets/
 dist/
