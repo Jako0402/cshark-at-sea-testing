@@ -42,6 +42,9 @@ jobs:
   docker-build-and-push:
     name: Docker Build and Push
     runs-on: ubuntu-latest  # Uses GitHub-hosted runner with Docker installed
+    permissions:
+      contents: read
+      packages: write
     needs: export-linux
     steps:
       - name: Checkout repository
