@@ -34,12 +34,9 @@ jobs:
           EXPORT_DIR="$(readlink -f build)"
           cd $PROJECT_PATH
           godot --headless --verbose --export-release "linux-server" "$EXPORT_DIR/linux/$EXPORT_NAME.x86_64"
+          
       - name: 'Login to GitHub Container Registry'
-        uses: docker/login-action@v1
-        with:
-              registry: ghcr.io
-              username: ${{github.actor}}
-              password: ${{secrets.GITHUB_TOKEN}}
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-
               
       - name: Build Docker image
         run: docker build -f ./docker/server.Dockerfile -t ghcr.io/${{ github.repository }}/$EXPORT_NAME:latest .
