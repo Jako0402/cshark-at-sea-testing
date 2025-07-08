@@ -1,7 +1,30 @@
-[gd_scene load_steps=26 format=3 uid="uid://cl3qj27qk7bsy"]
+[gd_scene load_steps=29 format=3 uid="uid://cl3qj27qk7bsy"]
 
 [ext_resource type="Texture2D" uid="uid://bs3ljr5qi827v" path="res://assets/sprites/knight.png" id="1_3vyb7"]
 [ext_resource type="Script" uid="uid://blskcxgpegkb4" path="res://scripts/player.gd" id="1_g2els"]
+[ext_resource type="Script" uid="uid://1a5djqccndo4" path="res://scripts/input_synchronizer.gd" id="2_qhqgy"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_qhqgy"]
+properties/0/path = NodePath(".:player_id")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:position")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+properties/2/path = NodePath(".:do_jump")
+properties/2/spawn = true
+properties/2/replication_mode = 1
+properties/3/path = NodePath(".:_is_on_floor")
+properties/3/spawn = true
+properties/3/replication_mode = 1
+properties/4/path = NodePath(".:direction")
+properties/4/spawn = true
+properties/4/replication_mode = 1
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_dqkch"]
+properties/0/path = NodePath("InputSynchronizer:input_direction")
+properties/0/spawn = true
+properties/0/replication_mode = 1
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_g2els"]
 atlas = ExtResource("1_3vyb7")
@@ -176,6 +199,14 @@ z_index = 5
 collision_layer = 2
 script = ExtResource("1_g2els")
 
+[node name="PlayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_qhqgy")
+
+[node name="InputSynchronizer" type="MultiplayerSynchronizer" parent="."]
+unique_name_in_owner = true
+replication_config = SubResource("SceneReplicationConfig_dqkch")
+script = ExtResource("2_qhqgy")
+
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, -12)
 sprite_frames = SubResource("SpriteFrames_tuyoq")
@@ -185,3 +216,17 @@ autoplay = "run"
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, -5)
 shape = SubResource("CircleShape2D_fjrip")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+unique_name_in_owner = true
+position = Vector2(-1, 1)
+zoom = Vector2(2, 2)
+limit_top = -150
+limit_bottom = 150
+limit_smoothed = true
+position_smoothing_enabled = true
+
+[node name="RespawnTimer" type="Timer" parent="."]
+one_shot = true
+
+[connection signal="timeout" from="RespawnTimer" to="." method="_respawn"]

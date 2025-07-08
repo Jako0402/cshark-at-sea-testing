@@ -1,23 +1,21 @@
-[gd_scene load_steps=6 format=4 uid="uid://bvhtxqdm7e2ji"]
+[gd_scene load_steps=7 format=4 uid="uid://bvhtxqdm7e2ji"]
 
-[ext_resource type="PackedScene" uid="uid://cl3qj27qk7bsy" path="res://scenes/player.tscn" id="1_uwrxv"]
+[ext_resource type="Script" uid="uid://eup34biv6gw6" path="res://scripts/game_manager.gd" id="1_p57ef"]
 [ext_resource type="TileSet" uid="uid://bsaimjtgqsfs2" path="res://scenes/tile_map.tres" id="2_lbhrr"]
 [ext_resource type="PackedScene" uid="uid://c58fvhisnlo6v" path="res://scenes/platform.tscn" id="3_lnu2h"]
 [ext_resource type="PackedScene" uid="uid://dvvc06kaqpeax" path="res://scenes/killzone.tscn" id="4_lbhrr"]
+[ext_resource type="PackedScene" uid="uid://bbg4pr0uos3mg" path="res://scenes/multiplayer_hud.tscn" id="5_iywne"]
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_iywne"]
 
 [node name="Game" type="Node2D"]
 
-[node name="Player" parent="." instance=ExtResource("1_uwrxv")]
-position = Vector2(1, -1)
+[node name="GameManager" type="Node" parent="."]
+script = ExtResource("1_p57ef")
 
-[node name="Camera2D" type="Camera2D" parent="Player"]
-position = Vector2(-1, 1)
-zoom = Vector2(4, 4)
-limit_bottom = 150
-limit_smoothed = true
-position_smoothing_enabled = true
+[node name="Camera" type="Camera2D" parent="."]
+position = Vector2(166, -12)
+zoom = Vector2(2, 2)
 
 [node name="TimeMapLevel" type="TileMapLayer" parent="."]
 tile_map_data = PackedByteArray("AAD8/wIAAAAAAAAAAAD9/wIAAAAAAAAAAAD+/wIAAAAAAAAAAAD//wIAAAAAAAAAAAAAAAIAAAAAAAAAAAABAAIAAAAAAAAAAAACAAIAAAAAAAAAAAADAAIAAAAAAAAAAAAEAAIAAAAAAAAAAAAFAAIAAAAAAAAAAAANAAIAAAAAAAAAAAAOAAIAAAAAAAAAAAAPAAIAAAAAAAAAAAAQAAIAAAAAAAAAAAARAAIAAAAAAAAAAAAWAAIAAAAAAAAAAAAVAAIAAAAAAAAAAAAUAAIAAAAAAAAAAAATAAIAAAAAAAAAAAASAAIAAAAAAAAAAAA=")
@@ -47,3 +45,20 @@ scale = Vector2(4.47843, 1.19931)
 [node name="Platform3" parent="Platforms" instance=ExtResource("3_lnu2h")]
 position = Vector2(166, -74)
 scale = Vector2(4.47843, 1.19931)
+
+[node name="MultiplayerHUD" parent="." instance=ExtResource("5_iywne")]
+unique_name_in_owner = true
+offset_left = -93.0
+offset_top = -29.0
+offset_right = -93.0
+offset_bottom = -29.0
+
+[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
+_spawnable_scenes = PackedStringArray("uid://cl3qj27qk7bsy")
+spawn_path = NodePath("../Players")
+spawn_limit = 4
+
+[node name="Players" type="Node2D" parent="."]
+
+[connection signal="host_game_pressed" from="MultiplayerHUD" to="GameManager" method="become_host"]
+[connection signal="join_game_pressed" from="MultiplayerHUD" to="GameManager" method="join_as_player_2"]
