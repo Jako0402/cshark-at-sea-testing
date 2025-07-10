@@ -1,0 +1,28 @@
+[gd_scene load_steps=3 format=3 uid="uid://bbhty812a36ek"]
+
+[ext_resource type="Script" uid="uid://cuu4oy48u34tu" path="res://scripts/damage_hud.gd" id="1_ucrx0"]
+[ext_resource type="FontFile" uid="uid://ba7phfwohnp7u" path="res://assets/fonts/PixelOperator8-Bold.ttf" id="2_4bcko"]
+
+[node name="DamageHUD" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_ucrx0")
+
+[node name="HUD" type="VBoxContainer" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Label" type="Label" parent="HUD"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_4bcko")
+theme_override_font_sizes/font_size = 24
+text = "Players : Damage"
+
+[node name="DamageList" type="VBoxContainer" parent="HUD"]
+unique_name_in_owner = true
+layout_mode = 2

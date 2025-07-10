@@ -1,12 +1,16 @@
 extends Node
 
 const SERVER_PORT = 3040
-const SERVER_IP = "127.0.0.1"
+var SERVER_IP = "51.38.225.9"
 
 var player = preload("res://scenes/player.tscn")
 var _players_spawn_node: Node
 var host_mode = false
 var respawn_point = Vector2(-30, 24)
+
+func _ready() -> void:
+	if OS.has_feature("debug"):
+		SERVER_IP = "127.0.0.1"
 
 func become_host():
 	print("Starting host")

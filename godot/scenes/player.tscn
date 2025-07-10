@@ -1,4 +1,4 @@
-[gd_scene load_steps=29 format=3 uid="uid://cl3qj27qk7bsy"]
+[gd_scene load_steps=36 format=3 uid="uid://cl3qj27qk7bsy"]
 
 [ext_resource type="Texture2D" uid="uid://bs3ljr5qi827v" path="res://assets/sprites/knight.png" id="1_3vyb7"]
 [ext_resource type="Script" uid="uid://blskcxgpegkb4" path="res://scripts/player.gd" id="1_g2els"]
@@ -20,11 +20,44 @@ properties/3/replication_mode = 1
 properties/4/path = NodePath(".:direction")
 properties/4/spawn = true
 properties/4/replication_mode = 1
+properties/5/path = NodePath(".:attack")
+properties/5/spawn = true
+properties/5/replication_mode = 1
+properties/6/path = NodePath(".:_is_attacking")
+properties/6/spawn = true
+properties/6/replication_mode = 1
+properties/7/path = NodePath(".:damage")
+properties/7/spawn = true
+properties/7/replication_mode = 1
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_dqkch"]
 properties/0/path = NodePath("InputSynchronizer:input_direction")
 properties/0/spawn = true
 properties/0/replication_mode = 1
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4ni07"]
+atlas = ExtResource("1_3vyb7")
+region = Rect2(32, 160, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_l71n6"]
+atlas = ExtResource("1_3vyb7")
+region = Rect2(64, 160, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ke2ow"]
+atlas = ExtResource("1_3vyb7")
+region = Rect2(96, 160, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ujl30"]
+atlas = ExtResource("1_3vyb7")
+region = Rect2(128, 160, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_31cv2"]
+atlas = ExtResource("1_3vyb7")
+region = Rect2(160, 160, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pf23h"]
+atlas = ExtResource("1_3vyb7")
+region = Rect2(192, 160, 32, 32)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_g2els"]
 atlas = ExtResource("1_3vyb7")
@@ -114,6 +147,29 @@ region = Rect2(224, 96, 32, 32)
 animations = [{
 "frames": [{
 "duration": 1.0,
+"texture": SubResource("AtlasTexture_4ni07")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_l71n6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ke2ow")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ujl30")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_31cv2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pf23h")
+}],
+"loop": true,
+"name": &"attack",
+"speed": 20.0
+}, {
+"frames": [{
+"duration": 1.0,
 "texture": SubResource("AtlasTexture_g2els")
 }, {
 "duration": 1.0,
@@ -194,6 +250,8 @@ animations = [{
 [sub_resource type="CircleShape2D" id="CircleShape2D_fjrip"]
 radius = 5.0
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_qhqgy"]
+
 [node name="Player" type="CharacterBody2D"]
 z_index = 5
 collision_layer = 2
@@ -210,8 +268,8 @@ script = ExtResource("2_qhqgy")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, -12)
 sprite_frames = SubResource("SpriteFrames_tuyoq")
-animation = &"jump"
-autoplay = "run"
+animation = &"attack"
+autoplay = "idle"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, -5)
@@ -229,4 +287,19 @@ position_smoothing_enabled = true
 [node name="RespawnTimer" type="Timer" parent="."]
 one_shot = true
 
+[node name="AttackDurationTimer" type="Timer" parent="."]
+wait_time = 0.5
+one_shot = true
+
+[node name="AttackHitbox" type="Area2D" parent="."]
+collision_mask = 2
+
+[node name="CollisionHitbox" type="CollisionShape2D" parent="AttackHitbox"]
+position = Vector2(0, -10)
+shape = SubResource("RectangleShape2D_qhqgy")
+disabled = true
+
 [connection signal="timeout" from="RespawnTimer" to="." method="_respawn"]
+[connection signal="timeout" from="AttackDurationTimer" to="." method="finish_attack"]
+[connection signal="body_entered" from="AttackHitbox" to="." method="_on_attack_hitbox_body_entered"]
+[connection signal="body_shape_entered" from="AttackHitbox" to="." method="_on_attack_hitbox_body_shape_entered"]
