@@ -1,0 +1,28 @@
+[gd_scene load_steps=3 format=3 uid="uid://bjhq5qk1uyo"]
+
+[ext_resource type="Script" uid="uid://bdm5gemw2so6p" path="res://scripts/lobby.gd" id="1_5gu6x"]
+[ext_resource type="Script" uid="uid://cwvxsnf1rf785" path="res://scripts/web_socket_client.gd" id="2_q60fs"]
+
+[node name="Lobby" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_5gu6x")
+
+[node name="WebSocketClient" type="Node" parent="."]
+script = ExtResource("2_q60fs")
+
+[node name="FindingMatch" type="RichTextLabel" parent="."]
+layout_mode = 0
+offset_left = 131.0
+offset_top = 290.0
+offset_right = 340.0
+offset_bottom = 396.0
+text = "Finding match"
+
+[connection signal="connected_to_server" from="WebSocketClient" to="." method="_on_websocket_client_connected_to_server"]
+[connection signal="connection_closed" from="WebSocketClient" to="." method="_on_websocket_client_connection_close"]
+[connection signal="message_received" from="WebSocketClient" to="." method="_on_websocket_message_received"]
