@@ -1,6 +1,8 @@
-from http.client import responses
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect
-import json
+from typing import Annotated
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect, Depends
+from sqlmodel import Field, Session, SQLModel, create_engine, select, Relationship
+from contextlib import asynccontextmanager
+import json, os
 
 REQUEST_MATCHES = "REQUEST_MATCHES"
 JOIN_MATCH = "JOIN_MATCH"
@@ -10,10 +12,56 @@ PLAYER_DROPPED = "PLAYER_DROPPED"
 CHECK_MATCH_READY = "CHECK_MATCH_READY"
 MATCH_READY = "MATCH_READY"
 
-temp_matches_table = [{"matchId": "1", "teamMakeup": "1v1", "map": "Studiecaféen"},
-                      {"matchId": "2", "teamMakeup": "1v1", "map": "PBA"}]
-temp_players_table = []
-app = FastAPI()
+active_connections = {}
+
+sqlite_file_name = "database.db"
+sqlite_url = f"sqlite:///{sqlite_file_name}"
+connect_args = {"check_same_thread": False}
+engine = create_engine(sqlite_url, connect_args=connect_args)
+
+class Player(SQLModel, table=True):
+    id: int | None = Field(default=None, primary_key=True)
+    username: str = Field(unique=True)
+
+class Match(SQLModel, table=True):
+    id: int | None = Field(default=None, primary_key=True)
+    map: str
+    team_makeup: str
+
+class MatchPlayer(SQLModel, table=True):
+    id: int | None = Field(default=None, primary_key=True)
+    player_id: int = Field(foreign_key="player.id")
+    match_id: int = Field(foreign_key="match.id")
+    team: str
+
+def create_db_and_tables():
+    SQLModel.metadata.create_all(engine)
+
+def get_session():
+    with Session(engine) as session:
+        yield session
+SessionDep = Annotated[Session, Depends(get_session)]
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    if os.path.exists("database.db"):
+        os.remove("database.db")
+    create_db_and_tables()
+    match_1 = Match(map="Studiecaféen", team_makeup="1v1")
+    match_2 = Match(map="PBA", team_makeup="1v1")
+    with Session(engine) as session:
+        session.add(match_1)
+        session.add(match_2)
+        session.commit()
+    yield
+
+
+
+app = FastAPI(lifespan=lifespan)
+
+
+
 class ConnectionManager:
     def __init__(self):
         self.active_connections: list[WebSocket] = []
@@ -35,69 +83,65 @@ class ConnectionManager:
 manager = ConnectionManager()
 
 @app.websocket("/")
-async def websocket_endpoint(websocket: WebSocket):
+async def websocket_endpoint(websocket: WebSocket, session: Session = Depends(get_session)):
     client_id = 1
     await manager.connect(websocket)
     try:
         while True:
             data = await websocket.receive_json()
             if data.get("op") == REQUEST_MATCHES:
-                print("REQUEST_MATCHES")
+                print(f"REQUEST_MATCHES: {data}")
+                active_connections[data.get("username")] = websocket
+                statement = select(Match)
+                found_matches = [match.model_dump() for match in session.exec(statement).all()]
                 response = {"op": REQUEST_MATCHES,
-                            "response": temp_matches_table}
+                            "response": found_matches}
                 await manager.send_personal_message(response, websocket)
+
             elif data.get("op") == JOIN_MATCH:
-                print("JOIN_MATCH")
-                match = next(x for x in temp_matches_table if x.get("matchId") == data.get("matchId"))
+                print(f"JOIN_MATCH: {data}") # JOIN_MATCH: {'matchId': 1, 'op': 'JOIN_MATCH', 'playerId': '928', 'username': 'User928'}
+                statement = select(Match).where(Match.id == data.get("matchId"))
+                match = session.exec(statement).one().model_dump()
+                print(f"Match found: {match}")
 
-                team1 = [x for x in temp_players_table if x.get("team") == "1"]
-                team2 = [x for x in temp_players_table if x.get("team") == "2"]
-
-                player_data = {
-                    "playerId": data.get("playerId"),
-                    "username": data.get("username"),
-                    "connectionId": websocket
-                }
+                statement = select(MatchPlayer).where(MatchPlayer.match_id == data.get("matchId"))
+                players_in_match = [match.model_dump() for match in session.exec(statement).all()]
+                print(f"Players in match: {players_in_match}")
+                team1 = [x for x in players_in_match if x.get("team") == "1"]
+                team2 = [x for x in players_in_match if x.get("team") == "2"]
 
                 if len(team1) < 1:
                     print("Adding player to team 1")
-                    player_data.update({"team": "1"})
+                    team = "1"
                 elif len(team2) < 1:
                     print("Adding player to team 2")
-                    player_data.update({"team": "2"})
+                    team = "2"
                 else:
                     print("Huh? Both teams are full...this should not happen")
                     return
+                new_match_player: MatchPlayer = MatchPlayer(player_id=data.get("playerId"), match_id=data.get("matchId"), team=team)
+                new_match_player_json = new_match_player.model_dump()
+                session.add(new_match_player)
+                session.commit()
+                print(f"new_match_player: {new_match_player}")
 
                 # Send PLAYER_JOINED to all other clients in match
-                users_for_match = []
-                for seq in (team1, team2):
-                    for client in seq:
-                        users_for_match.append(client)
-                        new_player = {
-                            "op": PLAYER_JOINED,
-                            "response": {
-                                "username": player_data.get("username"),
-                                "rank": "123"
-                            }
-                        }
-                        await manager.send_personal_message(new_player, client.get("connectionId"))
+                new_player_data = {
+                    "op": PLAYER_JOINED,
+                    "response": players_in_match
+                }
+                for client in players_in_match:
+                    await manager.send_personal_message(new_player_data, active_connections[client.get("username")])
 
-                temp_players_table.append(player_data)
                 match_players = {
                     "op": MATCH_PLAYERS,
                     "response": {
-                        "users": [{"username": x.get("username"), "rank": "123"} for x in users_for_match],
+                        "users": players_in_match + [new_match_player_json],
                         "matchInfo": match
                     }
                 }
-                print(match_players)
+
                 await manager.send_personal_message(match_players, websocket)
-
-
-
-
-
 
 
 

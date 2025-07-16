@@ -23,7 +23,6 @@ var mock_id = str(randi() % 1000)
 var mock_user = {
 	"playerId": mock_id,
 	"userName": "User" + mock_id,
-	"rank": "123"
 }
 
 func _connect_to_matchmaking_server() -> void:
@@ -52,7 +51,8 @@ func _on_websocket_client_connected_to_server():
 	$MatchmakingStatus.text = "[center]Looking for matches...[center]"
 	
 	var request_matches = {
-		"op": REQUEST_MATCHES
+		"op": REQUEST_MATCHES,
+		"usernamae": mock_user.userName
 	}
 	_send_message(request_matches)
 
@@ -94,7 +94,7 @@ func _add_matches_to_ui(matches):
 	for match_index in range(matches.size()):
 		print(matches[match_index])
 		
-		var button_text = "# %s | %s | %s" % [str(match_index), matches[match_index].teamMakeup, matches[match_index].map]
+		var button_text = "# %s | %s | %s" % [str(match_index), matches[match_index].team_makeup, matches[match_index].map]
 		var button_label := RichTextLabel.new()
 		button_label.set_text(button_text)
 		button_label.set_size(Vector2(800, 100))
@@ -115,9 +115,8 @@ func _join_match(match_to_join: Dictionary):
 	
 	var join_match_message = {
 		"op": JOIN_MATCH,
-		"matchId": match_to_join.matchId,
+		"matchId": match_to_join.id,
 		"playerId": mock_user.playerId,
-		"rank": mock_user.rank,
 		"username": mock_user.userName
 	}
 	_send_message(join_match_message)
@@ -129,11 +128,11 @@ func _enter_match_lobby(match_to_enter):
 	$MatchesContainer.hide()
 	$LobbyContainer.show()
 	$MatchmakingStatus.text = "[center]Waiting for players[center]"
-	$LobbyContainer/MapInfo.text = "[center]" + match_to_enter.matchInfo.map + " | " + match_to_enter.matchInfo.teamMakeup + "[center]"
+	$LobbyContainer/MapInfo.text = "[center]" + match_to_enter.matchInfo.map + " | " + match_to_enter.matchInfo.team_makeup + "[center]"
 	_build_player_lobby_lists(match_to_enter.users)
 	
 	# TODO: FIX TO SERVERSIDE
-	var match_id = match_to_enter.matchInfo.matchId
+	var match_id = match_to_enter.matchInfo.id
 	var check_match_ready = {
 		"op": CHECK_MATCH_READY,
 		"matchId": match_id
@@ -147,8 +146,9 @@ func _build_player_lobby_lists(match_players):
 		team_child.queue_free()
 	
 	for player in match_players:
+		print("match_players")
 		print(player)
-		var button_text = "%s | %s " % [player.username, player.rank]
+		var button_text = "%s" % [player.player_id]
 		
 		var button_label := RichTextLabel.new()
 		button_label.set_text(button_text)
