@@ -8,6 +8,9 @@ const PLAYER_DROPPED = "PLAYER_DROPPED"
 const CHECK_MATCH_READY = "CHECK_MATCH_READY"
 const MATCH_READY = "MATCH_READY"
 
+# textures
+var match_button_texture = preload("res://assets/sprites/coin.png")
+
 var websocket_url = "ws://localhost:8000"
 var message_to_send = ""
 
@@ -101,9 +104,9 @@ func _add_matches_to_ui(matches):
 		button_label.set_mouse_filter(Control.MOUSE_FILTER_IGNORE)
 		
 		var button := Button.new()
-		button.set
 		button.add_child(button_label)
 		button.pressed.connect(self._join_match.bind(matches[match_index]))
+		button.custom_minimum_size = Vector2(800, 100)
 		$MatchesContainer/AvailableMatches.add_child(button)
 	
 func _join_match(match_to_join: Dictionary):
@@ -157,6 +160,7 @@ func _build_player_lobby_lists(match_players):
 		
 		var button := Button.new()
 		button.add_child(button_label)
+		button.custom_minimum_size = Vector2(800, 100)
 		
 		if player.team == "1":
 			$LobbyContainer/Teams/Team1.add_child(button)
