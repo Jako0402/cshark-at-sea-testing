@@ -84,7 +84,6 @@ manager = ConnectionManager()
 
 @app.websocket("/")
 async def websocket_endpoint(websocket: WebSocket, session: Session = Depends(get_session)):
-    client_id = 1
     await manager.connect(websocket)
     try:
         while True:
@@ -105,15 +104,15 @@ async def websocket_endpoint(websocket: WebSocket, session: Session = Depends(ge
                 print(f"Match found: {match}")
 
                 statement = select(MatchPlayer).where(MatchPlayer.match_id == data.get("matchId"))
-                players_in_match = [match.model_dump() for match in session.exec(statement).all()]
-                print(f"Players in match: {players_in_match}")
-                team1 = [x for x in players_in_match if x.get("team") == "1"]
-                team2 = [x for x in players_in_match if x.get("team") == "2"]
+                existing_players_in_match = [match.model_dump() for match in session.exec(statement).all()]
+                print(f"existing_players_in_match: {existing_players_in_match}")
+                team1 = [x for x in existing_players_in_match if x.get("team") == "1"]
+                team2 = [x for x in existing_players_in_match if x.get("team") == "2"]
 
-                if len(team1) < 1:
+                if len(team1) < 2:
                     print("Adding player to team 1")
                     team = "1"
-                elif len(team2) < 1:
+                elif len(team2) < 2:
                     print("Adding player to team 2")
                     team = "2"
                 else:
@@ -121,22 +120,23 @@ async def websocket_endpoint(websocket: WebSocket, session: Session = Depends(ge
                     return
                 new_match_player: MatchPlayer = MatchPlayer(player_id=data.get("playerId"), match_id=data.get("matchId"), team=team)
                 new_match_player_json = new_match_player.model_dump()
+                all_players_in_match = existing_players_in_match + [new_match_player_json]
                 session.add(new_match_player)
                 session.commit()
-                print(f"new_match_player: {new_match_player}")
+                print(f"new_match_player_json: {new_match_player_json}")
 
                 # Send PLAYER_JOINED to all other clients in match
                 new_player_data = {
                     "op": PLAYER_JOINED,
-                    "response": players_in_match
+                    "response": all_players_in_match
                 }
-                for client in players_in_match:
-                    await manager.send_personal_message(new_player_data, active_connections[client.get("username")])
+                for client in existing_players_in_match:
+                    await manager.send_personal_message(new_player_data, active_connections[str(client.get("player_id"))])
 
                 match_players = {
                     "op": MATCH_PLAYERS,
                     "response": {
-                        "users": players_in_match + [new_match_player_json],
+                        "users": all_players_in_match,
                         "matchInfo": match
                     }
                 }
@@ -146,7 +146,48 @@ async def websocket_endpoint(websocket: WebSocket, session: Session = Depends(ge
 
 
             elif data.get("op") == CHECK_MATCH_READY:
-                print("CHECK_MATCH_READY")
+                print(f"CHECK_MATCH_READY: {data}")
+                statement = select(MatchPlayer).where(MatchPlayer.match_id == data.get("matchId"))
+                players_in_match = [match.model_dump() for match in session.exec(statement).all()]
+                print(f"Players in match: {players_in_match}")
+                team1 = [x for x in players_in_match if x.get("team") == "1"]
+                team2 = [x for x in players_in_match if x.get("team") == "2"]
+
+                if len(team1) == 2 and len(team2) == 2:
+                    print("Game is full. Staring game")
+                    # TODO: UPDATE MATCH STATUS
+                    connection_info = {
+                        "op": MATCH_READY,
+                        "ip": "IP HERE",
+                        "port": "SERVER PORT HERE"
+                    }
+                    for client in players_in_match:
+                        await manager.send_personal_message(connection_info, active_connections[client.get("username")])
+
+
     except WebSocketDisconnect:
         manager.disconnect(websocket)
-        await manager.broadcast(f"Client #{client_id} left the chat")
+        dropped_username = next((username for username, ws in active_connections.items() if ws == websocket), None)
+        print(f"Player: {dropped_username} dropped from lobby")
+        statement = select(MatchPlayer).where(MatchPlayer.player_id == dropped_username)
+        dropped_match_player = session.exec(statement).one()
+        match_id = dropped_match_player.model_dump().get("match_id")
+        session.delete(dropped_match_player)
+        session.commit()
+
+        statement = select(MatchPlayer).where(MatchPlayer.match_id == match_id)
+        existing_players_in_match = [match_player.model_dump() for match_player in session.exec(statement).all()]
+
+        dropped_player_info = {
+            "op": PLAYER_DROPPED,
+            "response": {
+                "users": existing_players_in_match
+            }
+        }
+        for client in existing_players_in_match:
+            print(f"Sent droppped to: {client}")
+            await manager.send_personal_message(dropped_player_info, active_connections[str(client.get("player_id"))])
+
+
+
+

@@ -22,7 +22,7 @@ signal start_client(ip, port)
 var mock_id = str(randi() % 1000)
 var mock_user = {
 	"playerId": mock_id,
-	"userName": "User" + mock_id,
+	"userName": mock_id,
 }
 
 func _connect_to_matchmaking_server() -> void:
@@ -52,7 +52,7 @@ func _on_websocket_client_connected_to_server():
 	
 	var request_matches = {
 		"op": REQUEST_MATCHES,
-		"usernamae": mock_user.userName
+		"username": mock_user.userName
 	}
 	_send_message(request_matches)
 
@@ -85,9 +85,14 @@ func _process_received_message(message):
 				start_client.emit(response_msg.response.io, response_msg.response.port)
 				web_socket_client.close(1000, "Game started, lobby ended normally.")
 			
-			elif response_msg.op == PLAYER_JOINED || response_msg.op == PLAYER_DROPPED:
+			elif response_msg.op == PLAYER_JOINED:
 				print(response_msg.op)
 				var match_with_players = response_msg.response
+				_build_player_lobby_lists(match_with_players)
+			
+			elif response_msg.op == PLAYER_DROPPED:
+				print(response_msg.op)
+				var match_with_players = response_msg.response.users
 				_build_player_lobby_lists(match_with_players)
 
 func _add_matches_to_ui(matches):
