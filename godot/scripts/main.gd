@@ -2,6 +2,8 @@ extends Node
 
 const LEVEL = preload("res://scenes/game.tscn")
 
+var player_id = "0"
+
 func _ready() -> void:
 	$UI/UsernameInput.text = str(randi() % 1000)
 	if OS.has_feature("dedicated_server"):
@@ -12,8 +14,15 @@ func _ready() -> void:
 func _on_find_match_pressed() -> void:
 	print("Find match pressed")
 	$UI.hide()
-	
+	player_id = $UI/UsernameInput.text
 	var lobby = preload("res://scenes/lobby.tscn").instantiate()
+	
+	lobby.mock_user = {
+		"playerId": player_id,
+		"userName": player_id,
+	}
+	
+	print("Player ID: %s" % player_id)
 	lobby.start_client.connect(join_as_player)
 	$LobbyPlaceholder.add_child(lobby)
 	

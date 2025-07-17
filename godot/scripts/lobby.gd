@@ -19,11 +19,7 @@ var message_to_send = ""
 signal start_client(ip, port)
 
 # TEMP
-var mock_id = str(randi() % 1000)
-var mock_user = {
-	"playerId": mock_id,
-	"userName": mock_id,
-}
+var mock_user = {}
 
 func _connect_to_matchmaking_server() -> void:
 	var error = web_socket_client.connect_to_url(websocket_url)
@@ -82,6 +78,7 @@ func _process_received_message(message):
 				print("MATCH_READY")
 				print("Connection info: %s, %s" % [response_msg.response.ip, response_msg.response.port])
 				$MatchmakingStatus.text = "[center]Match ready. Staring game[center]"
+				await get_tree().create_timer(2).timeout #TODO: CREATE ANIMATION FOR THIS
 				start_client.emit(response_msg.response.ip, response_msg.response.port)
 				web_socket_client.close(1000, "Game started, lobby ended normally.")
 			

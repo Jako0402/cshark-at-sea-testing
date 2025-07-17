@@ -4,6 +4,9 @@ from sqlmodel import Field, Session, SQLModel, create_engine, select, Relationsh
 from contextlib import asynccontextmanager
 import json, os
 
+GODOT_SERVER_IP = "127.0.0.1"
+GODOT_SERVER_PORT = 3040
+
 REQUEST_MATCHES = "REQUEST_MATCHES"
 JOIN_MATCH = "JOIN_MATCH"
 MATCH_PLAYERS = "MATCH_PLAYERS"
@@ -159,8 +162,8 @@ async def websocket_endpoint(websocket: WebSocket, session: Session = Depends(ge
                     connection_info = {
                         "op": MATCH_READY,
                         "response": {
-                            "ip": "127.0.0.1",
-                            "port": 3040
+                            "ip": GODOT_SERVER_IP,
+                            "port": GODOT_SERVER_PORT
                         }
                     }
                     for client in players_in_match:
