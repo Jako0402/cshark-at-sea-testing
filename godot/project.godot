@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="cshark-at-sea"
-run/main_scene="uid://bjhq5qk1uyo"
+run/main_scene="uid://x0mtm7cd4jmq"
 config/features=PackedStringArray("4.4", "Forward Plus")
 config/icon="res://icon.svg"
 

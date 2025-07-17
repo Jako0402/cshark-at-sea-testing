@@ -109,10 +109,10 @@ async def websocket_endpoint(websocket: WebSocket, session: Session = Depends(ge
                 team1 = [x for x in existing_players_in_match if x.get("team") == "1"]
                 team2 = [x for x in existing_players_in_match if x.get("team") == "2"]
 
-                if len(team1) < 2:
+                if len(team1) < 1:
                     print("Adding player to team 1")
                     team = "1"
-                elif len(team2) < 2:
+                elif len(team2) < 1:
                     print("Adding player to team 2")
                     team = "2"
                 else:
@@ -153,16 +153,18 @@ async def websocket_endpoint(websocket: WebSocket, session: Session = Depends(ge
                 team1 = [x for x in players_in_match if x.get("team") == "1"]
                 team2 = [x for x in players_in_match if x.get("team") == "2"]
 
-                if len(team1) == 2 and len(team2) == 2:
+                if len(team1) == 1 and len(team2) == 1:
                     print("Game is full. Staring game")
                     # TODO: UPDATE MATCH STATUS
                     connection_info = {
                         "op": MATCH_READY,
-                        "ip": "IP HERE",
-                        "port": "SERVER PORT HERE"
+                        "response": {
+                            "ip": "127.0.0.1",
+                            "port": 3040
+                        }
                     }
                     for client in players_in_match:
-                        await manager.send_personal_message(connection_info, active_connections[client.get("username")])
+                        await manager.send_personal_message(connection_info, active_connections[str(client.get("player_id"))])
 
 
     except WebSocketDisconnect:

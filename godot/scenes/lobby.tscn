@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://bjhq5qk1uyo"]
+[gd_scene load_steps=10 format=3 uid="uid://bjhq5qk1uyo"]
 
 [ext_resource type="Script" uid="uid://bdm5gemw2so6p" path="res://scripts/lobby.gd" id="1_5gu6x"]
 [ext_resource type="Script" uid="uid://cwvxsnf1rf785" path="res://scripts/web_socket_client.gd" id="2_q60fs"]
@@ -11,6 +11,8 @@
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_apkv3"]
 bg_color = Color(0.779268, 0.50599, 0.611989, 1)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_apkv3"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_q60fs"]
 
@@ -32,10 +34,10 @@ script = ExtResource("2_q60fs")
 
 [node name="MatchmakingStatus" type="RichTextLabel" parent="."]
 layout_mode = 0
-offset_left = 545.0
-offset_top = 45.0
-offset_right = 1030.0
-offset_bottom = 151.0
+offset_left = 943.0
+offset_top = 44.0
+offset_right = 1428.0
+offset_bottom = 150.0
 theme_override_font_sizes/normal_font_size = 30
 bbcode_enabled = true
 text = "[center]Cshark at sea technical demo"
@@ -99,10 +101,11 @@ text = "[center]Username[center]"
 fit_content = true
 
 [node name="LobbyContainer" type="Panel" parent="."]
-visible = false
 layout_mode = 0
+offset_top = 100.0
 offset_right = 40.0
-offset_bottom = 40.0
+offset_bottom = 140.0
+theme_override_styles/panel = SubResource("StyleBoxEmpty_apkv3")
 
 [node name="MapInfo" type="RichTextLabel" parent="LobbyContainer"]
 layout_mode = 0

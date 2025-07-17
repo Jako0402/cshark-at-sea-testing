@@ -83,7 +83,7 @@ func _physics_process(delta: float) -> void:
 		_apply_movement_from_input(delta)
 		_attack_from_input(delta)
 
-	if not multiplayer.is_server() || MultiplayerManager.host_mode:
+	if not multiplayer.is_server():
 		_apply_animations(delta)
 
 func mark_dead():

@@ -2,7 +2,7 @@
 __pycache__/
 *.py[codz]
 *$py.class
-
+database.db
 
 # Godot 4+ specific ignores
 .godot/

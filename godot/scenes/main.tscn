@@ -1,0 +1,52 @@
+[gd_scene load_steps=2 format=3 uid="uid://x0mtm7cd4jmq"]
+
+[ext_resource type="Script" uid="uid://dvm4oigo3pjl" path="res://scripts/main.gd" id="1_o5qli"]
+
+[node name="Main" type="Node"]
+script = ExtResource("1_o5qli")
+
+[node name="MultiplayerManager" type="Node" parent="."]
+
+[node name="Level" type="Node" parent="."]
+
+[node name="LevelSpawner" type="MultiplayerSpawner" parent="."]
+_spawnable_scenes = PackedStringArray("uid://bvhtxqdm7e2ji")
+spawn_path = NodePath("../Level")
+spawn_limit = 1
+
+[node name="UI" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="FindMatch" type="Button" parent="UI"]
+layout_mode = 0
+offset_left = 705.0
+offset_top = 346.0
+offset_right = 1135.0
+offset_bottom = 561.0
+text = "Find match"
+
+[node name="UsernameInput" type="LineEdit" parent="UI"]
+layout_mode = 0
+offset_left = 666.0
+offset_top = 266.0
+offset_right = 1189.0
+offset_bottom = 312.0
+placeholder_text = "INPUT USERNAME"
+max_length = 10
+virtual_keyboard_type = 2
+
+[node name="UsernameInfo" type="RichTextLabel" parent="UI"]
+layout_mode = 0
+offset_left = 610.0
+offset_top = 238.0
+offset_right = 1201.0
+offset_bottom = 274.0
+bbcode_enabled = true
+text = "[center]Choose usernumber[center]"
+
+[node name="LobbyPlaceholder" type="Node" parent="."]
+
+[connection signal="pressed" from="UI/FindMatch" to="." method="_on_find_match_pressed"]

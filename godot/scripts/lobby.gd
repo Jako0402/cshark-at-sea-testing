@@ -80,9 +80,9 @@ func _process_received_message(message):
 			
 			elif response_msg.op == MATCH_READY:
 				print("MATCH_READY")
-				print("Connection info: %s, %s" % [response_msg.response.io, response_msg.response.port])
+				print("Connection info: %s, %s" % [response_msg.response.ip, response_msg.response.port])
 				$MatchmakingStatus.text = "[center]Match ready. Staring game[center]"
-				start_client.emit(response_msg.response.io, response_msg.response.port)
+				start_client.emit(response_msg.response.ip, response_msg.response.port)
 				web_socket_client.close(1000, "Game started, lobby ended normally.")
 			
 			elif response_msg.op == PLAYER_JOINED:

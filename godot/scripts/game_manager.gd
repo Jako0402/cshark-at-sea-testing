@@ -10,7 +10,7 @@ func become_host():
 	%MultiplayerHUD.hide()
 	MultiplayerManager.become_host()
 
-func join_as_player_2():
+func join_as_player():
 	print("Join as player pressed")
 	%MultiplayerHUD.hide()
-	MultiplayerManager.join_as_player_2()
+	MultiplayerManager.join_as_player()
