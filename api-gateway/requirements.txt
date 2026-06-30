@@ -1,2 +1,2 @@
-fastapi~=0.116.1
-sqlmodel~=0.0.24
+fastapi
+sqlmodel

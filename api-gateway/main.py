@@ -16,7 +16,6 @@ CHECK_MATCH_READY = "CHECK_MATCH_READY"
 MATCH_READY = "MATCH_READY"
 
 active_connections = {}
-
 sqlite_file_name = "database.db"
 sqlite_url = f"sqlite:///{sqlite_file_name}"
 connect_args = {"check_same_thread": False}
