@@ -29,6 +29,8 @@ func join_as_player(ip = SERVER_IP, port = SERVER_PORT):
 	var client_peer = ENetMultiplayerPeer.new()
 	client_peer.create_client(ip, port)
 	multiplayer.multiplayer_peer = client_peer
+	if not multiplayer.server_disconnected.is_connected(_server_disconnected):
+		multiplayer.server_disconnected.connect(_server_disconnected)
 
 
 func _add_player_to_game(id: int):
@@ -44,3 +46,7 @@ func _del_player(id: int):
 	if not _players_spawn_node.has_node(str(id)):
 		return
 	_players_spawn_node.get_node(str(id)).queue_free()
+
+
+func _server_disconnected():
+	print("Server disconnected")

@@ -1,0 +1,35 @@
+[gd_scene format=3 uid="uid://cyuh04m8tq01k"]
+
+[ext_resource type="Script" uid="uid://bbm2qf12hunq4" path="res://scripts/game.gd" id="1_e6yxx"]
+[ext_resource type="PackedScene" uid="uid://dk7jueri67ax4" path="res://scenes/player.tscn" id="2_eqihu"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_dqkch"]
+size = Vector2(1144, 20)
+
+[sub_resource type="Gradient" id="Gradient_eqihu"]
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_074oj"]
+gradient = SubResource("Gradient_eqihu")
+
+[node name="Game" type="Node2D" unique_id=1101715241]
+script = ExtResource("1_e6yxx")
+player_scene = ExtResource("2_eqihu")
+
+[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="." unique_id=1558891027]
+_spawnable_scenes = PackedStringArray("uid://dk7jueri67ax4")
+spawn_path = NodePath("../PlayersSpawn")
+
+[node name="PlayersSpawn" type="Node2D" parent="." unique_id=10093554]
+unique_name_in_owner = true
+position = Vector2(425, 309)
+
+[node name="Area2D" type="Area2D" parent="." unique_id=693630670]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=1285183006]
+position = Vector2(573, 504)
+shape = SubResource("RectangleShape2D_dqkch")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=823989785]
+position = Vector2(576, 571.125)
+scale = Vector2(4.46875, 138.25003)
+texture = SubResource("GradientTexture1D_074oj")

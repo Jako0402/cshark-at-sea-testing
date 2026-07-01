@@ -1,39 +1,27 @@
-[gd_scene load_steps=36 format=3 uid="uid://cl3qj27qk7bsy"]
+[gd_scene format=3 uid="uid://cl3qj27qk7bsy"]
 
 [ext_resource type="Texture2D" uid="uid://bs3ljr5qi827v" path="res://assets/sprites/knight.png" id="1_3vyb7"]
 [ext_resource type="Script" uid="uid://blskcxgpegkb4" path="res://scripts/player.gd" id="1_g2els"]
-[ext_resource type="Script" uid="uid://1a5djqccndo4" path="res://scripts/input_synchronizer.gd" id="2_qhqgy"]
+[ext_resource type="Script" uid="uid://d350u8evihs1u" path="res://addons/netfox/rollback/rollback-synchronizer.gd" id="2_dqkch"]
+[ext_resource type="Script" uid="uid://dour8fehaaugp" path="res://addons/netfox/tick-interpolator.gd" id="2_qlg0r"]
+[ext_resource type="Script" uid="uid://y7sax7r2wx4o" path="res://scenes/player_input.gd" id="3_qlg0r"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_qhqgy"]
 properties/0/path = NodePath(".:player_id")
 properties/0/spawn = true
 properties/0/replication_mode = 0
-properties/1/path = NodePath(".:position")
+properties/1/path = NodePath(".:_is_on_floor")
 properties/1/spawn = true
 properties/1/replication_mode = 1
-properties/2/path = NodePath(".:do_jump")
+properties/2/path = NodePath(".:attack")
 properties/2/spawn = true
 properties/2/replication_mode = 1
-properties/3/path = NodePath(".:_is_on_floor")
+properties/3/path = NodePath(".:_is_attacking")
 properties/3/spawn = true
 properties/3/replication_mode = 1
-properties/4/path = NodePath(".:direction")
+properties/4/path = NodePath(".:damage")
 properties/4/spawn = true
 properties/4/replication_mode = 1
-properties/5/path = NodePath(".:attack")
-properties/5/spawn = true
-properties/5/replication_mode = 1
-properties/6/path = NodePath(".:_is_attacking")
-properties/6/spawn = true
-properties/6/replication_mode = 1
-properties/7/path = NodePath(".:damage")
-properties/7/spawn = true
-properties/7/replication_mode = 1
-
-[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_dqkch"]
-properties/0/path = NodePath("InputSynchronizer:input_direction")
-properties/0/spawn = true
-properties/0/replication_mode = 1
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_4ni07"]
 atlas = ExtResource("1_3vyb7")
@@ -164,7 +152,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_pf23h")
 }],
-"loop": true,
+"loop": 1,
 "name": &"attack",
 "speed": 20.0
 }, {
@@ -181,7 +169,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_qlg0r")
 }],
-"loop": true,
+"loop": 1,
 "name": &"idle",
 "speed": 10.0
 }, {
@@ -189,7 +177,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_tuyoq")
 }],
-"loop": true,
+"loop": 1,
 "name": &"jump",
 "speed": 5.0
 }, {
@@ -242,7 +230,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_a38lo")
 }],
-"loop": true,
+"loop": 1,
 "name": &"run",
 "speed": 10.0
 }]
@@ -252,30 +240,40 @@ radius = 5.0
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_qhqgy"]
 
-[node name="Player" type="CharacterBody2D"]
+[node name="Player" type="CharacterBody2D" unique_id=370993255]
 z_index = 5
 collision_layer = 2
 script = ExtResource("1_g2els")
 
-[node name="PlayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+[node name="PlayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1425077859]
 replication_config = SubResource("SceneReplicationConfig_qhqgy")
 
-[node name="InputSynchronizer" type="MultiplayerSynchronizer" parent="."]
-unique_name_in_owner = true
-replication_config = SubResource("SceneReplicationConfig_dqkch")
-script = ExtResource("2_qhqgy")
+[node name="TickInterpolator" type="Node" parent="." unique_id=1514493290 node_paths=PackedStringArray("root")]
+script = ExtResource("2_qlg0r")
+root = NodePath("..")
+metadata/_custom_type_script = "uid://dour8fehaaugp"
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+[node name="RollbackSynchronizer" type="Node" parent="." unique_id=1322305199 node_paths=PackedStringArray("root")]
+script = ExtResource("2_dqkch")
+root = NodePath("..")
+state_properties = Array[String]([":position", ":velocity", ":do_jump", ":direction"])
+input_properties = Array[String](["PlayerInput:input_direction"])
+metadata/_custom_type_script = "uid://d350u8evihs1u"
+
+[node name="PlayerInput" type="Node" parent="." unique_id=1582370551]
+script = ExtResource("3_qlg0r")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=589853599]
 position = Vector2(0, -12)
 sprite_frames = SubResource("SpriteFrames_tuyoq")
 animation = &"attack"
 autoplay = "idle"
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1837402695]
 position = Vector2(0, -5)
 shape = SubResource("CircleShape2D_fjrip")
 
-[node name="Camera2D" type="Camera2D" parent="."]
+[node name="Camera2D" type="Camera2D" parent="." unique_id=96561516]
 unique_name_in_owner = true
 position = Vector2(-1, 1)
 zoom = Vector2(2, 2)
@@ -284,17 +282,17 @@ limit_bottom = 150
 limit_smoothed = true
 position_smoothing_enabled = true
 
-[node name="RespawnTimer" type="Timer" parent="."]
+[node name="RespawnTimer" type="Timer" parent="." unique_id=1092596198]
 one_shot = true
 
-[node name="AttackDurationTimer" type="Timer" parent="."]
+[node name="AttackDurationTimer" type="Timer" parent="." unique_id=2013730719]
 wait_time = 0.5
 one_shot = true
 
-[node name="AttackHitbox" type="Area2D" parent="."]
+[node name="AttackHitbox" type="Area2D" parent="." unique_id=1856582017]
 collision_mask = 2
 
-[node name="CollisionHitbox" type="CollisionShape2D" parent="AttackHitbox"]
+[node name="CollisionHitbox" type="CollisionShape2D" parent="AttackHitbox" unique_id=441257104]
 position = Vector2(0, -10)
 shape = SubResource("RectangleShape2D_qhqgy")
 disabled = true

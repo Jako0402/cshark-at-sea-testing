@@ -9,8 +9,7 @@ const JUMP_VELOCITY = -400.0
 @export var player_id := 1:
 	set(id):
 		player_id = id
-		%InputSynchronizer.set_multiplayer_authority(id)
-
+		
 var direction = 1
 var do_jump = false
 var attack = false
@@ -19,7 +18,9 @@ var damage = 0
 var _is_on_floor = true
 var _is_attacking = false
 
+
 func _ready() -> void:
+	set_physics_process(false)
 	if multiplayer.get_unique_id() == player_id:
 		%Camera2D.make_current()
 	else:
@@ -58,14 +59,16 @@ func _apply_movement_from_input(delta):
 
 	# Get the input direction and handle the movement/deceleration.
 	# As good practice, you should replace UI actions with custom gameplay actions.
-	direction = %InputSynchronizer.input_direction
+	direction = $PlayerInput.input_direction
 	
 	if direction:
 		velocity.x = direction * SPEED
 	else:
 		velocity.x = move_toward(velocity.x, 0, SPEED)
 
+	velocity *= NetworkTime.physics_factor
 	move_and_slide()
+	velocity /= NetworkTime.physics_factor
 
 func _attack_from_input(delta):
 	if attack and not _is_attacking:
@@ -75,9 +78,9 @@ func _attack_from_input(delta):
 		collision_hitbox.disabled = false
 		
 		$AttackDurationTimer.start()
-		
 
-func _physics_process(delta: float) -> void:
+
+func _rollback_tick(delta: float, tick: int, is_fresh: bool) -> void:
 	if multiplayer.is_server():
 		_is_on_floor = is_on_floor()
 		_apply_movement_from_input(delta)

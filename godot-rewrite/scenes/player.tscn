@@ -1,0 +1,52 @@
+[gd_scene format=3 uid="uid://dk7jueri67ax4"]
+
+[ext_resource type="Script" uid="uid://y7sax7r2wx4o" path="res://scripts/player/player_input.gd" id="1_3vyb7"]
+[ext_resource type="Script" uid="uid://cid2k6ylrxqsi" path="res://scripts/player/player.gd" id="1_g2els"]
+[ext_resource type="Script" uid="uid://d350u8evihs1u" path="res://addons/netfox/rollback/rollback-synchronizer.gd" id="2_qhqgy"]
+[ext_resource type="Script" uid="uid://dour8fehaaugp" path="res://addons/netfox/tick-interpolator.gd" id="3_dqkch"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_dqkch"]
+properties/0/path = NodePath(".:player_id")
+properties/0/spawn = true
+properties/0/replication_mode = 0
+
+[sub_resource type="Gradient" id="Gradient_u8vuu"]
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_074oj"]
+gradient = SubResource("Gradient_u8vuu")
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_074oj"]
+size = Vector2(64, 64)
+
+[node name="Player" type="CharacterBody2D" unique_id=1011184107 node_paths=PackedStringArray("player_input", "camera")]
+script = ExtResource("1_g2els")
+player_input = NodePath("PlayerInput")
+camera = NodePath("PlayerCamera")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=398294972]
+replication_config = SubResource("SceneReplicationConfig_dqkch")
+
+[node name="RollbackSynchronizer" type="Node" parent="." unique_id=601818520 node_paths=PackedStringArray("root")]
+script = ExtResource("2_qhqgy")
+root = NodePath("..")
+state_properties = Array[String]([":position", ":velocity"])
+input_properties = Array[String](["PlayerInput:input_dir", "PlayerInput:input_jump"])
+metadata/_custom_type_script = "uid://d350u8evihs1u"
+
+[node name="TickInterpolator" type="Node" parent="." unique_id=1218632285 node_paths=PackedStringArray("root")]
+script = ExtResource("3_dqkch")
+root = NodePath("..")
+properties = Array[String]([":position"])
+metadata/_custom_type_script = "uid://dour8fehaaugp"
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=222361477]
+texture = SubResource("GradientTexture2D_074oj")
+
+[node name="PlayerInput" type="Node" parent="." unique_id=673508558]
+script = ExtResource("1_3vyb7")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1477034816]
+shape = SubResource("RectangleShape2D_074oj")
+
+[node name="PlayerCamera" type="Camera2D" parent="." unique_id=92300405]
+unique_name_in_owner = true

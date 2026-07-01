@@ -53,7 +53,7 @@ func _on_websocket_client_connected_to_server():
 	_send_message(request_matches)
 
 func _on_websocket_message_received(message):
-	print("Message recived: %s", % message)
+	print("Message recived: %s", message)
 	_process_received_message(message)
 
 func _process_received_message(message):

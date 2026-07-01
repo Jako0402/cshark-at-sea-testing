@@ -1,0 +1,30 @@
+[gd_scene format=3 uid="uid://camet21swi5kh"]
+
+[ext_resource type="Script" uid="uid://de8ouoxohurn8" path="res://scripts/ui/main_menu.gd" id="1_l6cm7"]
+
+[node name="MainMenu" type="Control" unique_id=565776015]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_l6cm7")
+
+[node name="Panel" type="Panel" parent="." unique_id=1832935285]
+layout_mode = 0
+offset_left = 530.0
+offset_top = 220.0
+offset_right = 530.0
+offset_bottom = 220.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel" unique_id=129367169]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="FindMatch" type="Button" parent="Panel/VBoxContainer" unique_id=2112485263]
+layout_mode = 2
+text = "Find match"
+
+[connection signal="pressed" from="Panel/VBoxContainer/FindMatch" to="." method="_on_find_match_pressed"]
