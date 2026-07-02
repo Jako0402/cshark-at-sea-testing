@@ -3,13 +3,13 @@
 [ext_resource type="Script" uid="uid://bbm2qf12hunq4" path="res://scripts/game.gd" id="1_e6yxx"]
 [ext_resource type="PackedScene" uid="uid://dk7jueri67ax4" path="res://scenes/player.tscn" id="2_eqihu"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_dqkch"]
-size = Vector2(1144, 20)
-
 [sub_resource type="Gradient" id="Gradient_eqihu"]
 
 [sub_resource type="GradientTexture1D" id="GradientTexture1D_074oj"]
 gradient = SubResource("Gradient_eqihu")
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_074oj"]
+size = Vector2(255.55246, 0.99095833)
 
 [node name="Game" type="Node2D" unique_id=1101715241]
 script = ExtResource("1_e6yxx")
@@ -23,13 +23,13 @@ spawn_path = NodePath("../PlayersSpawn")
 unique_name_in_owner = true
 position = Vector2(425, 309)
 
-[node name="Area2D" type="Area2D" parent="." unique_id=693630670]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=1285183006]
-position = Vector2(573, 504)
-shape = SubResource("RectangleShape2D_dqkch")
-
-[node name="Sprite2D" type="Sprite2D" parent="." unique_id=823989785]
-position = Vector2(576, 571.125)
+[node name="StaticBody2D" type="StaticBody2D" parent="." unique_id=223380443]
+position = Vector2(569, 562)
 scale = Vector2(4.46875, 138.25003)
+
+[node name="Sprite2D" type="Sprite2D" parent="StaticBody2D" unique_id=823989785]
 texture = SubResource("GradientTexture1D_074oj")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D" unique_id=1108197120]
+position = Vector2(0, 0.0036172867)
+shape = SubResource("RectangleShape2D_074oj")

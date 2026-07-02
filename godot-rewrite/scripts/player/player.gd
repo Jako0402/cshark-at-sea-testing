@@ -5,6 +5,7 @@ const SPEED = 140.0
 const JUMP_VELOCITY = -400.0
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 
+@onready var rollback_synchronizer = $RollbackSynchronizer
 @export var player_input: PlayerInput
 @export var camera: Camera2D
 @export var player_id := 1:
@@ -20,6 +21,9 @@ func _ready() -> void:
 		camera.make_current()
 	else:
 		camera.enabled = false
+
+	rollback_synchronizer.process_settings()
+
 
 
 func _rollback_tick(delta: float, tick: int, is_fresh: bool) -> void:
