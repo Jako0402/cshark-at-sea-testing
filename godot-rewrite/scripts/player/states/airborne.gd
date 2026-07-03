@@ -1,7 +1,17 @@
 extends PlayerState
 
+const SHORT_HOP_GRAVITY_MULT = 2.5
+
 func tick(delta: float, tick: int, is_fresh: bool) -> void:
-	player.velocity.y += player.gravity * delta
+	if input.jump_just_pressed and player.air_jumps_left > 0:
+		player.velocity.y = player.JUMP_VELOCITY
+		player.air_jumps_left -= 1
+		
+	var current_gravity = player.gravity
+	if player.velocity.y < 0 and not input.jump_held:
+		current_gravity *= SHORT_HOP_GRAVITY_MULT
+		
+	player.velocity.y += current_gravity * delta
 	
 	if input.input_dir != 0:
 		player.velocity.x = input.input_dir * player.SPEED

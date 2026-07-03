@@ -67,6 +67,7 @@ heavy_attack={
 [netfox]
 
 extras/auto_tile_windows=false
+autoconnect/simulated_latency_ms=500
 
 [physics]
 

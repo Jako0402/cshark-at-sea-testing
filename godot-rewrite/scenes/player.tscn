@@ -21,7 +21,7 @@ properties/0/replication_mode = 0
 gradient = SubResource("Gradient_u8vuu")
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_074oj"]
-size = Vector2(64, 64)
+size = Vector2(58, 112.5)
 
 [node name="Player" type="CharacterBody2D" unique_id=1011184107 node_paths=PackedStringArray("player_input", "state_machine", "camera")]
 collision_layer = 2
@@ -36,8 +36,8 @@ replication_config = SubResource("SceneReplicationConfig_dqkch")
 [node name="RollbackSynchronizer" type="Node" parent="." unique_id=601818520 node_paths=PackedStringArray("root")]
 script = ExtResource("2_qhqgy")
 root = NodePath("..")
-state_properties = Array[String]([":position", ":velocity", "RewindableStateMachine:state"])
-input_properties = Array[String](["PlayerInput:input_dir", "PlayerInput:input_jump"])
+state_properties = Array[String]([":position", ":velocity", "RewindableStateMachine:state", ":air_jumps_left"])
+input_properties = Array[String](["PlayerInput:input_dir", "PlayerInput:jump_held", "PlayerInput:jump_just_pressed"])
 metadata/_custom_type_script = "uid://d350u8evihs1u"
 
 [node name="RewindableStateMachine" type="Node" parent="." unique_id=291267198]
@@ -71,12 +71,15 @@ properties = Array[String]([":position"])
 metadata/_custom_type_script = "uid://dour8fehaaugp"
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=222361477]
+position = Vector2(0, -28.5)
+scale = Vector2(1, 1.890625)
 texture = SubResource("GradientTexture2D_074oj")
 
 [node name="PlayerInput" type="Node" parent="." unique_id=673508558]
 script = ExtResource("1_3vyb7")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1477034816]
+position = Vector2(0, -24.25)
 shape = SubResource("RectangleShape2D_074oj")
 
 [node name="PlayerCamera" type="Camera2D" parent="." unique_id=92300405]

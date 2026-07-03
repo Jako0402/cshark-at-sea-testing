@@ -3,8 +3,10 @@ extends Node
 
 
 var input_dir: float
-var input_jump = 0
 
+var jump_held: bool = false
+var jump_just_pressed: bool = false
+var _previous_jump_held: bool = false
 
 func _ready() -> void:
 	set_physics_process(false)
@@ -18,4 +20,6 @@ func _gather() -> void:
 	
 	if multiplayer.has_multiplayer_peer():
 		input_dir = Input.get_axis("left", "right")
-		input_jump = Input.get_action_strength("jump")
+		_previous_jump_held = jump_held
+		jump_held = Input.is_action_pressed("jump")
+		jump_just_pressed = jump_held and not _previous_jump_held

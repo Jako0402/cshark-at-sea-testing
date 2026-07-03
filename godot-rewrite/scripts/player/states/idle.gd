@@ -1,8 +1,10 @@
 extends PlayerState
 
 func tick(delta: float, tick: int, is_fresh: bool) -> void:
-	if input.input_jump > 0:
-		player.velocity.y = player.JUMP_VELOCITY * input.input_jump	
+	player.air_jumps_left = player.MAX_AIR_JUMPS
+	
+	if input.jump_held:
+		player.velocity.y = player.JUMP_VELOCITY
 	player.velocity.x = move_toward(player.velocity.x, 0, player.SPEED)
 
 	player.execute_physics()

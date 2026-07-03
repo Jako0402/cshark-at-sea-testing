@@ -1,9 +1,12 @@
 class_name Player
 extends CharacterBody2D
 
-const SPEED = 140.0
-const JUMP_VELOCITY = -400.0
+const MAX_AIR_JUMPS: int = 1
+const SPEED: float = 200.0
+const JUMP_VELOCITY: float = -600.0
+
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
+var air_jumps_left: int = MAX_AIR_JUMPS
 
 @onready var rollback_synchronizer = $RollbackSynchronizer
 @export var player_input: PlayerInput
