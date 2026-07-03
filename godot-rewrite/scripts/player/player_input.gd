@@ -8,6 +8,7 @@ var input_jump = 0
 
 func _ready() -> void:
 	set_physics_process(false)
+	set_process(false)
 	NetworkTime.before_tick_loop.connect(_gather)
 
 
@@ -17,7 +18,4 @@ func _gather() -> void:
 	
 	if multiplayer.has_multiplayer_peer():
 		input_dir = Input.get_axis("left", "right")
-
-
-func _process(delta):
-	input_jump = Input.get_action_strength("jump")
+		input_jump = Input.get_action_strength("jump")
