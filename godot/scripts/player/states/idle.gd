@@ -1,6 +1,11 @@
+@tool
 extends PlayerState
 
 func tick(delta: float, tick: int, is_fresh: bool) -> void:
+	# Stop Rider from yelling at me
+	if Engine.is_editor_hint():
+		return
+		
 	player.air_jumps_left = player.MAX_AIR_JUMPS
 	
 	if input.jump_held:

@@ -3,8 +3,8 @@ extends Node
 const SERVER_PORT: int = 3040
 var SERVER_IP: String = "51.38.225.9"
 
-const GAME_SCENE = "res://scenes/levels/game.tscn"
-var is_server = false
+const GAME_SCENE: String = "res://scenes/levels/game.tscn"
+var is_server: bool = false
 
 func _ready() -> void:
 	if OS.has_feature("debug"):

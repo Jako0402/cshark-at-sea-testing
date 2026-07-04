@@ -8,7 +8,7 @@ const JUMP_VELOCITY: float = -600.0
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 var air_jumps_left: int = MAX_AIR_JUMPS
 
-@onready var rollback_synchronizer = $RollbackSynchronizer
+@onready var rollback_synchronizer: RollbackSynchronizer = $RollbackSynchronizer
 @export var player_input: PlayerInput
 @export var state_machine: RewindableStateMachine
 @export var camera: Camera2D
@@ -41,7 +41,7 @@ func execute_physics() -> void:
 	
 
 func _force_update_is_on_floor():
-	var old_velocity = velocity
+	var old_velocity: Vector2 = velocity
 	velocity = Vector2.ZERO
 	move_and_slide()
 	velocity = old_velocity

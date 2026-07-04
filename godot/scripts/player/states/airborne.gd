@@ -1,8 +1,13 @@
+@tool
 extends PlayerState
 
-const SHORT_HOP_GRAVITY_MULT = 2.5
+const SHORT_HOP_GRAVITY_MULT: float = 2.5
 
 func tick(delta: float, tick: int, is_fresh: bool) -> void:
+	# Stop Rider from yelling at me
+	if Engine.is_editor_hint():
+		return
+		
 	if input.jump_just_pressed and player.air_jumps_left > 0:
 		player.velocity.y = player.JUMP_VELOCITY
 		player.air_jumps_left -= 1
@@ -22,6 +27,6 @@ func tick(delta: float, tick: int, is_fresh: bool) -> void:
 
 	if player.is_on_floor():
 		if input.input_dir == 0:
-			state_machine.transition("Idle")
+			state_machine.transition(&"Idle")
 		else:
-			state_machine.transition("Run")
+			state_machine.transition(&"Run")
