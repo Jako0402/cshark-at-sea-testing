@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="CharacterData" format=3 uid="uid://dshdgkg5ecstw"]
+
+[ext_resource type="Script" uid="uid://c7f7s6asmbqjd" path="res://entities/characters/character_data.gd" id="1_t6l25"]
+[ext_resource type="PackedScene" uid="uid://cpjj6swkl0n1r" path="res://entities/characters/cshark/cshark_signature_attack_state.tscn" id="2_rcq1r"]
+[ext_resource type="SpriteFrames" uid="uid://nlqtmlaa2sgp" path="res://entities/characters/cshark/cshark_sprite.tres" id="3_yv2tp"]
+
+[resource]
+script = ExtResource("1_t6l25")
+max_air_jumps = 10
+sprite_frames = ExtResource("3_yv2tp")
+signature_attack = ExtResource("2_rcq1r")
+metadata/_custom_type_script = "uid://c7f7s6asmbqjd"

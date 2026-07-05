@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="HitboxProfile" format=3 uid="uid://c04l4s06egtrw"]
+
+[ext_resource type="Script" uid="uid://bdlhslr10qi4w" path="res://entities/characters/hitbox_profile.gd" id="1_ubikn"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_gguyi"]
+radius = 25.0
+
+[resource]
+script = ExtResource("1_ubikn")
+shape = SubResource("CircleShape2D_gguyi")
+metadata/_custom_type_script = "uid://bdlhslr10qi4w"

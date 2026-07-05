@@ -11,6 +11,9 @@ func _ready() -> void:
 	if Engine.is_editor_hint():
 		return
 	# Grab references once so all child states have them
-	player = owner as Player
-	input = player.player_input
 	player_state_machine = get_parent() as RewindableStateMachine
+	player = player_state_machine.get_parent() as Player
+	input = player.player_input
+
+func enter(previous_state: RewindableState, tick: int) -> void:
+	player.state_tick = 0

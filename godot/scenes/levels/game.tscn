@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://cyuh04m8tq01k"]
 
 [ext_resource type="Script" uid="uid://bbm2qf12hunq4" path="res://scripts/game.gd" id="1_e6yxx"]
-[ext_resource type="PackedScene" uid="uid://dk7jueri67ax4" path="res://scenes/player.tscn" id="2_eqihu"]
+[ext_resource type="PackedScene" uid="uid://dk7jueri67ax4" path="res://entities/player/player.tscn" id="2_eqihu"]
 
 [sub_resource type="Gradient" id="Gradient_eqihu"]
 

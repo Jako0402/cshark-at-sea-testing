@@ -1,0 +1,111 @@
+[gd_scene format=3 uid="uid://dk7jueri67ax4"]
+
+[ext_resource type="Script" uid="uid://cid2k6ylrxqsi" path="res://entities/player/player.gd" id="1_bectd"]
+[ext_resource type="Resource" uid="uid://dshdgkg5ecstw" path="res://entities/characters/cshark/cshark.tres" id="2_7thud"]
+[ext_resource type="Script" uid="uid://d350u8evihs1u" path="res://addons/netfox/rollback/rollback-synchronizer.gd" id="2_wvtmh"]
+[ext_resource type="Script" uid="uid://byrgwv2o7hstx" path="res://addons/netfox.extras/state-machine/rewindable-state-machine.gd" id="3_7thud"]
+[ext_resource type="Script" uid="uid://dvpw2rekq8j3k" path="res://entities/player/states/idle.gd" id="4_a1qjk"]
+[ext_resource type="Script" uid="uid://br3td3hwk2lb8" path="res://entities/player/states/run.gd" id="5_j3ovn"]
+[ext_resource type="Script" uid="uid://dno71ovgkl0lm" path="res://entities/player/states/airborne.gd" id="6_afbqv"]
+[ext_resource type="Script" uid="uid://usyufdtn83hc" path="res://addons/netfox.extras/state-machine/rewindable-state.gd" id="7_gx6sm"]
+[ext_resource type="Script" uid="uid://dour8fehaaugp" path="res://addons/netfox/tick-interpolator.gd" id="8_yqrof"]
+[ext_resource type="Script" uid="uid://y7sax7r2wx4o" path="res://entities/player/player_input.gd" id="9_3wlsy"]
+[ext_resource type="Script" uid="uid://nb6ynmqf3i3c" path="res://entities/player/states/hitstun.gd" id="9_a1qjk"]
+[ext_resource type="SpriteFrames" uid="uid://nlqtmlaa2sgp" path="res://entities/characters/cshark/cshark_sprite.tres" id="10_7thud"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_dqkch"]
+properties/0/path = NodePath(".:player_id")
+properties/0/spawn = true
+properties/0/replication_mode = 0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ur7pv"]
+size = Vector2(53, 89)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_y4r1p"]
+size = Vector2(78, 20)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_074oj"]
+size = Vector2(58, 110)
+
+[node name="Player" type="CharacterBody2D" unique_id=1011184107 node_paths=PackedStringArray("player_input", "camera")]
+collision_layer = 2
+script = ExtResource("1_bectd")
+character_data = ExtResource("2_7thud")
+player_input = NodePath("PlayerInput")
+camera = NodePath("PlayerCamera")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=398294972]
+replication_config = SubResource("SceneReplicationConfig_dqkch")
+
+[node name="RollbackSynchronizer" type="Node" parent="." unique_id=601818520 node_paths=PackedStringArray("root")]
+script = ExtResource("2_wvtmh")
+root = NodePath("..")
+state_properties = Array[String]([":position", ":velocity", "RewindableStateMachine:state", ":air_jumps_left", ":facing_dir", ":state_tick", ":damage_taken"])
+input_properties = Array[String](["PlayerInput:input_dir", "PlayerInput:jump_held", "PlayerInput:jump_just_pressed", "PlayerInput:attack_held", "PlayerInput:attack_just_pressed"])
+metadata/_custom_type_script = "uid://d350u8evihs1u"
+
+[node name="RewindableStateMachine" type="Node" parent="." unique_id=291267198]
+script = ExtResource("3_7thud")
+metadata/_custom_type_script = "uid://byrgwv2o7hstx"
+
+[node name="Idle" type="Node" parent="RewindableStateMachine" unique_id=721045950]
+script = ExtResource("4_a1qjk")
+metadata/_custom_type_script = "uid://usyufdtn83hc"
+
+[node name="Run" type="Node" parent="RewindableStateMachine" unique_id=1802215514]
+script = ExtResource("5_j3ovn")
+metadata/_custom_type_script = "uid://usyufdtn83hc"
+
+[node name="Airborne" type="Node" parent="RewindableStateMachine" unique_id=993527054]
+script = ExtResource("6_afbqv")
+metadata/_custom_type_script = "uid://usyufdtn83hc"
+
+[node name="WallSlide" type="Node" parent="RewindableStateMachine" unique_id=1220381373]
+script = ExtResource("7_gx6sm")
+metadata/_custom_type_script = "uid://usyufdtn83hc"
+
+[node name="Knockout" type="Node" parent="RewindableStateMachine" unique_id=1692689841]
+script = ExtResource("7_gx6sm")
+metadata/_custom_type_script = "uid://usyufdtn83hc"
+
+[node name="Hitstun" type="Node" parent="RewindableStateMachine" unique_id=1395436558]
+script = ExtResource("9_a1qjk")
+metadata/_custom_type_script = "uid://usyufdtn83hc"
+
+[node name="TickInterpolator" type="Node" parent="." unique_id=1218632285 node_paths=PackedStringArray("root")]
+script = ExtResource("8_yqrof")
+root = NodePath("..")
+properties = Array[String]([":position"])
+metadata/_custom_type_script = "uid://dour8fehaaugp"
+
+[node name="Pivot" type="Node2D" parent="." unique_id=1746054560]
+unique_name_in_owner = true
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Pivot" unique_id=946548386]
+unique_name_in_owner = true
+position = Vector2(1, -65)
+scale = Vector2(0.3591224, 0.4116118)
+sprite_frames = ExtResource("10_7thud")
+
+[node name="Hurtbox" type="Area2D" parent="Pivot" unique_id=2071322007]
+
+[node name="HurtboxShape" type="CollisionShape2D" parent="Pivot/Hurtbox" unique_id=1505300506]
+position = Vector2(2, -42)
+shape = SubResource("RectangleShape2D_ur7pv")
+
+[node name="HitboxLight" type="Area2D" parent="Pivot" unique_id=617345956]
+unique_name_in_owner = true
+
+[node name="HitboxLightShape" type="CollisionShape2D" parent="Pivot/HitboxLight" unique_id=1115856275]
+position = Vector2(61, -57)
+shape = SubResource("RectangleShape2D_y4r1p")
+
+[node name="PlayerInput" type="Node" parent="." unique_id=673508558]
+script = ExtResource("9_3wlsy")
+
+[node name="PlayerCamera" type="Camera2D" parent="." unique_id=92300405]
+unique_name_in_owner = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1477034816]
+position = Vector2(0, -23)
+shape = SubResource("RectangleShape2D_074oj")

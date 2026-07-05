@@ -1,0 +1,20 @@
+[gd_scene format=3 uid="uid://cpjj6swkl0n1r"]
+
+[ext_resource type="Script" uid="uid://dmggbaa7yn4aa" path="res://entities/characters/cshark/cshark_signature_attack.gd" id="1_uwiy6"]
+[ext_resource type="Script" uid="uid://bdlhslr10qi4w" path="res://entities/characters/hitbox_profile.gd" id="2_n1s6l"]
+[ext_resource type="Resource" uid="uid://bdl4vtw25o7xf" path="res://entities/characters/cshark/signature_hitbox/1.tres" id="3_pndpt"]
+[ext_resource type="Resource" uid="uid://civl5si5gnewf" path="res://entities/characters/cshark/signature_hitbox/2.tres" id="4_vfu1q"]
+[ext_resource type="Resource" uid="uid://c04l4s06egtrw" path="res://entities/characters/cshark/signature_hitbox/3.tres" id="5_rbe4f"]
+[ext_resource type="Resource" uid="uid://bt5f5jpf7qqvg" path="res://entities/characters/cshark/signature_hitbox/4.tres" id="6_fi7i0"]
+[ext_resource type="Script" uid="uid://we05bylf7rhy" path="res://entities/characters/attack_animation_data.gd" id="7_r4lxg"]
+
+[sub_resource type="Resource" id="Resource_6nu3g"]
+script = ExtResource("7_r4lxg")
+recovery_ticks = 0
+active_hitbox_frames = Array[ExtResource("2_n1s6l")]([ExtResource("3_pndpt"), ExtResource("4_vfu1q"), ExtResource("5_rbe4f"), ExtResource("6_fi7i0"), ExtResource("6_fi7i0")])
+metadata/_custom_type_script = "uid://we05bylf7rhy"
+
+[node name="CsharkSignatureAttack" type="Node" unique_id=1506246722]
+script = ExtResource("1_uwiy6")
+attack_data = SubResource("Resource_6nu3g")
+metadata/_custom_type_script = "uid://usyufdtn83hc"

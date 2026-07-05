@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="AttackAnimationData" format=3 uid="uid://uuehpux37dd7"]
+
+[ext_resource type="Script" uid="uid://bdlhslr10qi4w" path="res://entities/characters/hitbox_profile.gd" id="1_ubepk"]
+[ext_resource type="Resource" uid="uid://bdl4vtw25o7xf" path="res://entities/characters/cshark/signature_hitbox/1.tres" id="2_m6pyj"]
+[ext_resource type="Script" uid="uid://we05bylf7rhy" path="res://entities/characters/attack_animation_data.gd" id="2_vuwgc"]
+[ext_resource type="Resource" uid="uid://civl5si5gnewf" path="res://entities/characters/cshark/signature_hitbox/2.tres" id="3_m8sej"]
+[ext_resource type="Resource" uid="uid://c04l4s06egtrw" path="res://entities/characters/cshark/signature_hitbox/3.tres" id="4_qv1rg"]
+[ext_resource type="Resource" uid="uid://bt5f5jpf7qqvg" path="res://entities/characters/cshark/signature_hitbox/4.tres" id="5_2qnm1"]
+
+[resource]
+script = ExtResource("2_vuwgc")
+recovery_ticks = 0
+active_hitbox_frames = Array[ExtResource("1_ubepk")]([ExtResource("2_m6pyj"), ExtResource("3_m8sej"), ExtResource("4_qv1rg"), ExtResource("5_2qnm1"), ExtResource("5_2qnm1")])
+metadata/_custom_type_script = "uid://we05bylf7rhy"

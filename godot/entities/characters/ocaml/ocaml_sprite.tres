@@ -1,0 +1,14 @@
+[gd_resource type="SpriteFrames" format=3 uid="uid://c28y1hyfkxyax"]
+
+[ext_resource type="Texture2D" uid="uid://dkeo01v1dnnuq" path="res://entities/characters/ocaml/ocaml.png" id="1_cee0k"]
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_cee0k")
+}],
+"loop": 1,
+"name": &"default",
+"speed": 5.0
+}]
