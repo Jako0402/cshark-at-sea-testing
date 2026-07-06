@@ -72,29 +72,14 @@ func _process_active_frames() -> void:
 		var current_profile: HitboxProfile = attack_data.active_hitbox_frames[frame_index]
 		player.enable_hitbox(current_profile)
 		
-		# 1. Grab the Hitbox Area2D
 		var hitbox_area: Area2D = player.get_node("%HitboxLight")
-		
-		# 2. Poll for overlapping AREAS (Hurtboxes), not BODIES (Physics)
 		var overlapping_areas = hitbox_area.get_overlapping_areas()
 		
-		for area in overlapping_areas:
-			# 3. Ensure we are only interacting with Hurtboxes
-			if area.name == "Hurtbox":
-				
-				# 4. Navigate up the tree to find the Player node.
-				# In image_611345.png, the structure is Player -> Pivot -> Hurtbox.
-				# 'owner' safely grabs the root of the instantiated Player scene.
-				var enemy = area.owner as Player
-				
-				# Fallback if 'owner' isn't set (e.g., built entirely in code):
-				if enemy == null:
-					enemy = area.get_parent().get_parent() as Player
-				
-				# 5. Check if valid, not ourselves, and not already hit this attack
-				if enemy != null and enemy != player and not enemy in already_hit:
-					_apply_hit(enemy, current_profile)
-					already_hit.append(enemy)
+		for area in overlapping_areas:	
+			var enemy = area.owner as Player
+			if enemy != null and enemy != player and not enemy in already_hit:
+				_apply_hit(enemy, current_profile)
+				already_hit.append(enemy)
 
 func _apply_hit(enemy: Player, profile: HitboxProfile) -> void:
 	var k_base: float = profile.base_knockback

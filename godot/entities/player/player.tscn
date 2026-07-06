@@ -88,6 +88,8 @@ scale = Vector2(0.3591224, 0.4116118)
 sprite_frames = ExtResource("10_7thud")
 
 [node name="Hurtbox" type="Area2D" parent="Pivot" unique_id=2071322007]
+collision_layer = 4
+collision_mask = 0
 
 [node name="HurtboxShape" type="CollisionShape2D" parent="Pivot/Hurtbox" unique_id=1505300506]
 position = Vector2(2, -42)
@@ -95,6 +97,8 @@ shape = SubResource("RectangleShape2D_ur7pv")
 
 [node name="HitboxLight" type="Area2D" parent="Pivot" unique_id=617345956]
 unique_name_in_owner = true
+collision_layer = 8
+collision_mask = 4
 
 [node name="HitboxLightShape" type="CollisionShape2D" parent="Pivot/HitboxLight" unique_id=1115856275]
 position = Vector2(61, -57)

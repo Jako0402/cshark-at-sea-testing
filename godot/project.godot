@@ -64,6 +64,13 @@ heavy_attack={
 ]
 }
 
+[layer_names]
+
+2d_physics/layer_1="Environment"
+2d_physics/layer_2="PlayerPhysics"
+2d_physics/layer_3="Hurtboxes"
+2d_physics/layer_4="Hitboxes"
+
 [netfox]
 
 extras/auto_tile_windows=false
