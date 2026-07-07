@@ -2,8 +2,10 @@
 
 [ext_resource type="Script" uid="uid://c7f7s6asmbqjd" path="res://entities/characters/character_data.gd" id="1_qis1t"]
 [ext_resource type="SpriteFrames" uid="uid://c28y1hyfkxyax" path="res://entities/characters/ocaml/ocaml_sprite.tres" id="2_ep65x"]
+[ext_resource type="PackedScene" uid="uid://cpjj6swkl0n1r" path="res://entities/characters/cshark/cshark_signature_attack_state.tscn" id="2_k6d8l"]
 
 [resource]
 script = ExtResource("1_qis1t")
 sprite_frames = ExtResource("2_ep65x")
+signature_attack = ExtResource("2_k6d8l")
 metadata/_custom_type_script = "uid://c7f7s6asmbqjd"

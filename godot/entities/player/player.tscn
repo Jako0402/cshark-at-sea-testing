@@ -1,7 +1,6 @@
 [gd_scene format=3 uid="uid://dk7jueri67ax4"]
 
 [ext_resource type="Script" uid="uid://cid2k6ylrxqsi" path="res://entities/player/player.gd" id="1_bectd"]
-[ext_resource type="Resource" uid="uid://dshdgkg5ecstw" path="res://entities/characters/cshark/cshark.tres" id="2_7thud"]
 [ext_resource type="Script" uid="uid://d350u8evihs1u" path="res://addons/netfox/rollback/rollback-synchronizer.gd" id="2_wvtmh"]
 [ext_resource type="Script" uid="uid://byrgwv2o7hstx" path="res://addons/netfox.extras/state-machine/rewindable-state-machine.gd" id="3_7thud"]
 [ext_resource type="Script" uid="uid://dvpw2rekq8j3k" path="res://entities/player/states/idle.gd" id="4_a1qjk"]
@@ -17,6 +16,9 @@
 properties/0/path = NodePath(".:player_id")
 properties/0/spawn = true
 properties/0/replication_mode = 0
+properties/1/path = NodePath(".:character_id")
+properties/1/spawn = true
+properties/1/replication_mode = 0
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ur7pv"]
 size = Vector2(53, 89)
@@ -30,7 +32,6 @@ size = Vector2(58, 110)
 [node name="Player" type="CharacterBody2D" unique_id=1011184107 node_paths=PackedStringArray("player_input", "camera")]
 collision_layer = 2
 script = ExtResource("1_bectd")
-character_data = ExtResource("2_7thud")
 player_input = NodePath("PlayerInput")
 camera = NodePath("PlayerCamera")
 

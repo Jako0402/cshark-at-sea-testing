@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://camet21swi5kh"]
 
-[ext_resource type="Script" uid="uid://de8ouoxohurn8" path="res://scripts/ui/main_menu.gd" id="1_l6cm7"]
+[ext_resource type="Script" uid="uid://de8ouoxohurn8" path="res://ui/main_menu/main_menu.gd" id="1_uhj5c"]
 
 [node name="MainMenu" type="Control" unique_id=565776015]
 layout_mode = 3
@@ -9,7 +9,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_l6cm7")
+script = ExtResource("1_uhj5c")
 
 [node name="Panel" type="Panel" parent="." unique_id=1832935285]
 layout_mode = 0
@@ -23,8 +23,18 @@ layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
+[node name="cshark" type="Button" parent="Panel/VBoxContainer" unique_id=156279343]
+layout_mode = 2
+text = "Chose cshark"
+
+[node name="ocaml" type="Button" parent="Panel/VBoxContainer" unique_id=2146282434]
+layout_mode = 2
+text = "Chose OCaml"
+
 [node name="FindMatch" type="Button" parent="Panel/VBoxContainer" unique_id=2112485263]
 layout_mode = 2
 text = "Find match"
 
+[connection signal="pressed" from="Panel/VBoxContainer/cshark" to="." method="_on_select_cshark_pressed"]
+[connection signal="pressed" from="Panel/VBoxContainer/ocaml" to="." method="_on_select_ocaml_pressed"]
 [connection signal="pressed" from="Panel/VBoxContainer/FindMatch" to="." method="_on_find_match_pressed"]

@@ -11,11 +11,12 @@ var damage_taken: int = 0
 #  1 = Facing Right
 # -1 = Facing Left
 var facing_dir: int = 1
+var character_data: CharacterData
 
+@export var character_id: String = ""
 @onready var rollback_synchronizer: RollbackSynchronizer = $RollbackSynchronizer
 @onready var pivot: Node = %Pivot
 @onready var sprite: AnimatedSprite2D = %AnimatedSprite2D
-@export var character_data: CharacterData
 @export var player_input: PlayerInput
 @export var camera: Camera2D
 @export var player_id := 1:
@@ -24,19 +25,25 @@ var facing_dir: int = 1
 
 func _enter_tree() -> void:
 	player_input.set_multiplayer_authority(str(name).to_int())
-	var signature_attack: Node = character_data.signature_attack.instantiate()
-	signature_attack.name = &"SignatureAttack"
-	$RewindableStateMachine.add_child(signature_attack)
-	signature_attack.owner = $RewindableStateMachine
 
 
 func _ready() -> void:
 	set_physics_process(false)	
 	gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
+	
+	if character_id == "":
+		character_id = "cshark" # Fallback
+	character_data = CharacterRegistry.get_character(character_id)
+	
 	air_jumps_left = character_data.max_air_jumps
 	speed = character_data.speed
 	jump_velocity = character_data.jump_velocity
 	sprite.sprite_frames = character_data.sprite_frames
+	
+	var signature_attack: RewindableState = character_data.signature_attack.instantiate()
+	signature_attack.name = &"SignatureAttack"
+	$RewindableStateMachine.add_child(signature_attack)
+	signature_attack.owner = $RewindableStateMachine
 	
 	if multiplayer.get_unique_id() == player_id:
 		camera.make_current()

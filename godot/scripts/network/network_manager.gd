@@ -5,6 +5,7 @@ var SERVER_IP: String = "51.38.225.9"
 
 const GAME_SCENE: String = "res://scenes/levels/game.tscn"
 var is_server: bool = false
+var local_character: String = "cshark"
 
 func _ready() -> void:
 	if OS.has_feature("debug"):
@@ -15,7 +16,8 @@ func _process(delta: float) -> void:
 	pass
 
 
-func load_game_scene() -> void: 
+func load_game_scene(character_chosen: String) -> void: 
+	local_character = character_chosen
 	get_tree().call_deferred(&"change_scene_to_packed", preload(GAME_SCENE))
 
 	

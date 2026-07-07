@@ -25,6 +25,7 @@ NetworkRollback="*uid://gas743comroj"
 NetworkEvents="*uid://bdmobxxptryj0"
 NetworkPerformance="*uid://cqgf7aqmjfoa3"
 NetworkManager="*uid://bpw1hdeia6t3h"
+CharacterRegistry="*uid://cl2ggwf63fryo"
 
 [display]
 
@@ -73,8 +74,10 @@ heavy_attack={
 
 [netfox]
 
-extras/auto_tile_windows=false
 autoconnect/simulated_latency_ms=500
+logging/netfox_extras_log_level=4
+logging/log_level=4
+logging/netfox_log_level=4
 
 [physics]
 
