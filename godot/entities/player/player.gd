@@ -22,9 +22,14 @@ var character_data: CharacterData
 @export var player_id := 1:
 	set(id):
 		player_id = id
+		if is_inside_tree(): 
+			_build_character_attacks() # Server call
+
 
 func _enter_tree() -> void:
 	player_input.set_multiplayer_authority(str(name).to_int())
+	if character_id != "": 
+		_build_character_attacks() # Client calls 
 
 
 func _ready() -> void:
@@ -40,11 +45,6 @@ func _ready() -> void:
 	jump_velocity = character_data.jump_velocity
 	sprite.sprite_frames = character_data.sprite_frames
 	
-	var signature_attack: RewindableState = character_data.signature_attack.instantiate()
-	signature_attack.name = &"SignatureAttack"
-	$RewindableStateMachine.add_child(signature_attack)
-	signature_attack.owner = $RewindableStateMachine
-	
 	if multiplayer.get_unique_id() == player_id:
 		camera.make_current()
 	else:
@@ -52,6 +52,17 @@ func _ready() -> void:
 	
 	$RewindableStateMachine.state = &"Idle"
 	rollback_synchronizer.process_settings()
+
+func _build_character_attacks() -> void:
+	if $RewindableStateMachine.has_node("SignatureAttack"):
+		return
+		
+	character_data = CharacterRegistry.get_character(character_id)
+	
+	var signature_attack: RewindableState = character_data.signature_attack.instantiate()
+	signature_attack.name = &"SignatureAttack"
+	$RewindableStateMachine.add_child(signature_attack)
+	signature_attack.owner = $RewindableStateMachine
 
 
 func execute_physics() -> void:

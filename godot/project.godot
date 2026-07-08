@@ -10,7 +10,7 @@ config_version=5
 
 [application]
 
-config/name="cshark-at-sea"
+config/name="cshark-platform-fighter"
 run/main_scene="uid://camet21swi5kh"
 config/features=PackedStringArray("4.7", "Forward Plus")
 config/icon="res://icon.svg"
